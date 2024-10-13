@@ -1,0 +1,23 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/GeoJsonDB?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+cloudinary:
+  cloud-name: dkcn9vpuy
+  api-key: 136272232281289
+  secret-key: OB7tNZdLb222OCnGCbcz2-nkess
+jwt:
+  accessToken: "oGuan+rlGCKCbL7pNKWTXd105C0QN0EOxs4zntzEPtCg3ZQPq9ivt1dm9COrDXPY"
+  expiryTime: 3600 #Th?i gian h?t h?n c?a token theo giây
+  refreshToken: "TmaYX9O/HJjGlI7CKMLGnYv8lFfAkaaRW6mb90AWRNYAUyz4sEI0cUSfVTLrromU"
+  expiryTimeRefreshToken: 36000 #Th?i gian h?t h?n refresh
