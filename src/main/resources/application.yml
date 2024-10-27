@@ -12,12 +12,40 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: javaforfun127@gmail.com
+    password: wsva xyvh wrlf ihcg
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
 cloudinary:
   cloud-name: dkcn9vpuy
   api-key: 136272232281289
   secret-key: OB7tNZdLb222OCnGCbcz2-nkess
 jwt:
   accessToken: "oGuan+rlGCKCbL7pNKWTXd105C0QN0EOxs4zntzEPtCg3ZQPq9ivt1dm9COrDXPY"
-  expiryTime: 3600 #Th?i gian h?t h?n c?a token theo giây
+  expiryTime: 3600
   refreshToken: "TmaYX9O/HJjGlI7CKMLGnYv8lFfAkaaRW6mb90AWRNYAUyz4sEI0cUSfVTLrromU"
-  expiryTimeRefreshToken: 36000 #Th?i gian h?t h?n refresh
+  expiryTimeRefreshToken: 36000
+#  logging.level.org.hibernate.SQL=DEBUG
+#  logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+logging:
+  level:
+    org:
+      hibernate:
+        sql: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

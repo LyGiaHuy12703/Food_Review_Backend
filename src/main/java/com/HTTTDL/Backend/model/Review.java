@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,9 +18,11 @@ public class Review {
     String comment;
     int rating;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     User user;
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "position_id")
-    Position position;
+    GeoFeature geoFeatures;
 }

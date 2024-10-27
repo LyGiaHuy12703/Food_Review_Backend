@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.ultis;
 
+import com.HTTTDL.Backend.enums.Role;
 import com.HTTTDL.Backend.exception.AppException;
 import com.HTTTDL.Backend.model.User;
 import com.nimbusds.jose.*;
@@ -10,13 +11,11 @@ import com.nimbusds.jwt.SignedJWT;
 import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.StringJoiner;
 
 @Component
 public class Helper {
@@ -37,14 +36,14 @@ public class Helper {
 
     }
     //build scope for user
-    public String buildScopeUser(User user){
-        StringJoiner stringJoiner = new StringJoiner(" ");//phân cách bằng dấu cách
-        if(!CollectionUtils.isEmpty(user.getRoles())){
-            user.getRoles().forEach(stringJoiner::add);
-        }
-
-        return stringJoiner.toString();
-    }
+//    public String buildScopeUser(User user){
+//        StringJoiner stringJoiner = new StringJoiner(" ");//phân cách bằng dấu cách
+//        if(!CollectionUtils.isEmpty(user.getRoles())){
+//            user.getRoles().forEach(stringJoiner::add);
+//        }
+//
+//        return stringJoiner.toString();
+//    }
 
     //generate token cho user
     public String generateTokenUser(
@@ -58,11 +57,11 @@ public class Helper {
         ) : expireTime;
         JWSHeader jwtHeader = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet claimsSet = new  JWTClaimsSet.Builder()
-                .subject(user.getUsername())
-                .issuer("telemedicine.com")
+                .subject(user.getEmail())
+                .issuer("FoodDelivery.com")
                 .issueTime(new Date())
                 .expirationTime(expirationTimeVar)
-                .claim("scope",buildScopeUser(user))
+                .claim("scope", user.getRole().toString())
                 .claim("name",user.getName())
                 .build();
         Payload payload = new Payload(claimsSet.toJSONObject());

@@ -14,7 +14,7 @@ public class RegisterRequest {
     String id;
     @Size(min = 5, message = "NAME MUST BE MORE THAN 5 CHARACTERS")
     String name;
-    String username;
+    String email;
     @Size(min = 5, message = "PASSWORD MUST BE MORE THAN 5 CHARACTERS")
     String password;
 }

@@ -40,8 +40,10 @@ public class SecurityConfig {
             "auth/register",
             "auth/login",
             "auth/introspect",
-//            "auth/logout",
             "auth/refreshToken",
+            "geo/upload",
+            "geo/features",
+            "auth/register/verify/**"
     } ;
 
     CustomJwtDecoder customJwtDecoder;
@@ -52,13 +54,14 @@ public class SecurityConfig {
         //cấu hình những đường dẫn guest có thể đi vào
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "auth/verify/**").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 //kiểm tra jwt của hệ thống
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
-                        .jwtAuthenticationConverter(jwtConverter()))
+                                .jwtAuthenticationConverter(jwtConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
 
@@ -75,6 +78,7 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:5500");
         corsConfiguration.addAllowedOrigin("http://localhost:3000");  // Cho phép frontend truy cập từ localhost:3000
         corsConfiguration.addAllowedMethod("*");  // Cho phép tất cả các phương thức: GET, POST, PUT, DELETE, etc.
         corsConfiguration.addAllowedHeader("*");  // Cho phép tất cả các header

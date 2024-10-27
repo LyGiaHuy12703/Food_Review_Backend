@@ -94,14 +94,40 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
-		<!--	lưu kiểu point-->
+		<!-- Jackson (cho JSON) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>6.5.1.Final</version> <!-- Hoặc phiên bản phù hợp -->
+		</dependency>
 
+		<!-- GeoTools -->
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-geojson -->
+		<dependency>
+			<groupId>io.oss84.geotools</groupId>
+			<artifactId>gt-geojson</artifactId>
+			<version>24.2-oss84-1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.oss84.geotools</groupId>
+			<artifactId>gt-main</artifactId>
+			<version>24.2-oss84-1</version>
+		</dependency>
+		<!--	lưu kiểu point-->
 			<dependency>
 				<groupId>org.locationtech.jts</groupId>
 				<artifactId>jts-core</artifactId>
 				<version>1.18.2</version>
 			</dependency>
-
 	</dependencies>
 
 	<build>

@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,5 +20,6 @@ public class Images {
     String url;
     @ManyToOne
     @JoinColumn(name = "position_id")
-    Position position;
+    @JsonBackReference
+    GeoFeature geoFeatures;
 }

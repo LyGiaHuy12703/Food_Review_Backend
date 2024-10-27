@@ -1,13 +1,15 @@
 package com.HTTTDL.Backend.model;
 
+import com.HTTTDL.Backend.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -20,13 +22,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
-    String username;
+    @Email
+    @Column(unique = true)
+    String email;
     String password;
-    Set<String> roles = new HashSet<>();
+    Role role ;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     List<Review> reviews = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     Token token;
 }

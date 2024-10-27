@@ -15,6 +15,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,15 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,7 +38,6 @@ import java.util.Optional;
 public class AuthenticateService {
     Helper helper;
     UserRepository userRepository;
-    UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
     @NonFinal
@@ -56,23 +53,41 @@ public class AuthenticateService {
     @Value("${jwt.expiryTimeRefreshToken}")
     protected int TOKEN_REFRESH_EXPIRY_TIME;
 
-    public String register(RegisterRequest request) {
-        User findUser = userRepository.findByUsername(request.getUsername()).orElse(null);
-        if (findUser != null) {
-            throw new AppException(HttpStatus.BAD_REQUEST, "User existed", "auth-e-01");
+    public void register(RegisterRequest request) {
+        boolean existedUser = userRepository.existsByEmail(request.getEmail());
+        if(existedUser){
+            throw new AppException(HttpStatus.BAD_REQUEST, "Email has existed", "auth-e-01");
         }
-        User user = userMapper.toUser(request);
+    }
+    public AuthResponse verifyRegister(RegisterRequest request) {
+        // Find user if not existed
+        boolean existedUser = userRepository.existsByEmail(request.getEmail());
+        if(existedUser){
+            throw new AppException(HttpStatus.BAD_REQUEST, "Email has existed", "auth-e-01");
+        }
+        // Hash password
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        request.setPassword(hashedPassword);
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        HashSet<String> roles = new HashSet<>();
-
-        roles.add(Role.USER.toString());
-
-        user.setRoles(roles);
-
+        // Roles for normal user
+        Role role = Role.USER;
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+        user.setRole(role);
         userRepository.save(user);
-        return "Register successful";
+
+        // Generate a pair of token
+        String accessToken = helper.generateTokenUser(user,TOKEN_EXPIRY_TIME,ACCESS_TOKEN_SECRET,null);
+        String refreshToken = helper.generateTokenUser(user,TOKEN_REFRESH_EXPIRY_TIME,REFRESH_TOKEN_SECRET,null);
+        TokenResponse tokenResponse =TokenResponse.builder()
+                .access_token(accessToken)
+                .refresh_token(refreshToken)
+                .build();
+        return AuthResponse.builder()
+                .token(tokenResponse)
+                .build();
     }
     private SignedJWT verifyTokenPrivate(String token, boolean isRefersh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(ACCESS_TOKEN_SECRET.getBytes());
@@ -108,40 +123,41 @@ public class AuthenticateService {
 
         return IntrospectResponse.builder().valid(isValid).build();
     }
-    public AuthResponse loginUser(AuthRequest request){
-        User user = userRepository.findByUsername(request.getUsername()).orElse(null);
-        if(user == null){
-            throw new AppException(HttpStatus.BAD_REQUEST, "User not found", "auth-e-01");
+    public AuthResponse signinUser(
+            AuthRequest request
+    ) {
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if(user == null) {
+            throw new  AppException(HttpStatus.BAD_REQUEST, "Login fail");
         }
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
-        if(!authenticated){
-            throw new AppException(HttpStatus.BAD_REQUEST, "UnAuthenticated", "auth-e-04");
+        boolean isMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if(!isMatch) {
+            throw new  AppException(HttpStatus.BAD_REQUEST, "Login fail");
         }
-        var accessToken = helper.generateTokenUser(user, TOKEN_EXPIRY_TIME, ACCESS_TOKEN_SECRET, null);
-        var refreshToken = helper.generateTokenUser(user, TOKEN_REFRESH_EXPIRY_TIME, REFRESH_TOKEN_SECRET, null);
+        //generate token
+        String accessToken = helper.generateTokenUser(user,TOKEN_EXPIRY_TIME,ACCESS_TOKEN_SECRET,null);
+        String refreshToken = helper.generateTokenUser(user,TOKEN_REFRESH_EXPIRY_TIME,REFRESH_TOKEN_SECRET,null);
 
         Token token = tokenRepository.findByUserId(user.getId());
-        if(token == null){
+        if(token == null) {
             tokenRepository.save(Token.builder()
                     .user(user)
-                    .token(refreshToken)
                     .refreshToken(refreshToken)
-                    .createAt(new Date())
-                    .build()
-            );
-        }else{
-            token.setToken(accessToken);
+                    .build());
+        }else {
             token.setRefreshToken(refreshToken);
             tokenRepository.save(token);
         }
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .role(helper.buildScopeUser(user))
+        TokenResponse tokenResponse =TokenResponse.builder()
+                .access_token(accessToken)
+                .refresh_token(refreshToken)
                 .build();
+        AuthResponse userResponse = AuthResponse.builder()
+                .email(user.getEmail())
+                .token(tokenResponse)
+                .role(user.getRole().toString())
+                .build();
+        return userResponse;
     }
     public TokenResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
         String token = request.refresh_token();
@@ -168,16 +184,17 @@ public class AuthenticateService {
                 .build();
         return tokenResponse;
     }
+    @Transactional
     public String logout() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        var email = auth.getName();
+        var username = auth.getName();
         //xóa token trong db
-        User user = userRepository.findByUsername(email).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
 
         if(user == null) {
             throw new  AppException(HttpStatus.NOT_FOUND, "User not found", "auth-e-02");
         }
-        tokenRepository.deleteTokenByUser(user);
+        tokenRepository.deleteTokenByUserId(user.getId());
         return "Logout successfully";
     }
 }

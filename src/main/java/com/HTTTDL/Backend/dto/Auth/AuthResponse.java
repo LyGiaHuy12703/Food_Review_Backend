@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.dto.Auth;
 
+import com.HTTTDL.Backend.dto.Token.TokenResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,8 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthResponse {
-    String username;
-    String accessToken;
-    String refreshToken;
+    String email;
+    TokenResponse token;
     String role;
 }
