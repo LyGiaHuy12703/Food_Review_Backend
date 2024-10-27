@@ -45,7 +45,7 @@ public class EmailService {
                 "<p>Chào bạn,</p>"
                         + "<p>Cảm ơn bạn đã đăng ký tài khoản! Để hoàn tất, vui lòng xác thực tài khoản bằng cách nhấn vào liên kết bên dưới:</p>"
                         + "<p><a href='%s'>Xác thực tài khoản</a></p>"
-                        + "<p>Trân trọng,<br><b>FOOD DELIVERY</b></p>",
+                        + "<p>Trân trọng,<br><b>FOOD REVIEW</b></p>",
                 verifyUrl
         );
         SendEmailDto emailPayload = SendEmailDto.builder()
@@ -60,15 +60,15 @@ public class EmailService {
     public void sendEmailToWelcome(String toEmail) {
         String emailText = """
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <h2>Chào mừng bạn đến với FOOD DELIVERY!</h2>
-            <p>Cảm ơn bạn đã tham gia cùng chúng tôi. Chúng tôi rất vui khi có bạn là một phần của cộng đồng <b>FOOD DELIVERY</b>.</p>
+            <h2>Chào mừng bạn đến với FOOD REVIEW!</h2>
+            <p>Cảm ơn bạn đã tham gia cùng chúng tôi. Chúng tôi rất vui khi có bạn là một phần của cộng đồng <b>FOOD REVIEW</b>.</p>
             <p>Chúc bạn có những trải nghiệm tuyệt vời khi sử dụng dịch vụ của chúng tôi!</p>
-            <p>Trân trọng,<br><b>FOOD DELIVERY</b></p>
+            <p>Trân trọng,<br><b>FOOD REVIEW</b></p>
         </div>
     """;
         SendEmailDto emailPayload = SendEmailDto.builder()
                 .to(toEmail)
-                .subject("Chào mừng đến với FOOD DELIVERY!")
+                .subject("Chào mừng đến với FOOD REVIEW!")
                 .text(emailText)
                 .isHtml(true)  // Gửi email dưới dạng HTML
                 .build();
