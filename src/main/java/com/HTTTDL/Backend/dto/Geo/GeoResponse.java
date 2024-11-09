@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.dto.Geo;
 
+import com.HTTTDL.Backend.model.GeoFeature;
 import com.HTTTDL.Backend.model.Review;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -28,4 +29,5 @@ public class GeoResponse {
     Float rate;
     List<Review> reviews;
     Set<String> images;
+
 }

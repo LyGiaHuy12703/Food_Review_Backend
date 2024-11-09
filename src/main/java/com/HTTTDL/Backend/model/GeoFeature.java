@@ -38,9 +38,7 @@ public class GeoFeature {
     Float rate;
 
     @Column(columnDefinition = "POINT")
-//    @Type(type = "org.hibernate.spatial.GeometryType")
     Point point;
-//    Geometry point;
 
     @OneToMany(mappedBy = "geoFeatures", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -48,8 +46,4 @@ public class GeoFeature {
     @ElementCollection
     Set<String> images = new HashSet<>();
 
-    public GeoFeature(String name, Point geometry) {
-        this.name = name;
-        this.point = geometry;
-    }
 }
