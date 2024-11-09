@@ -19,8 +19,8 @@ import java.util.List;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     String name;
     @Email
     @Column(unique = true)

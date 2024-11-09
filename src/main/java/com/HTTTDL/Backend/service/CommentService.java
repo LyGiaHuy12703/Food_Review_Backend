@@ -62,7 +62,7 @@ public class CommentService {
                 .rating(review.getRating())
                 .build();
     }
-    private void updateRate(Long geoFeatureId, int rating) {
+    private void updateRate(String geoFeatureId, int rating) {
         GeoFeature geoFeature = geoFeatureRepository.findById(geoFeatureId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Feature not found"));
         List<Review> reviews = commentRepository.findByGeoFeaturesId(geoFeatureId);
@@ -81,13 +81,13 @@ public class CommentService {
         geoFeatureRepository.save(geoFeature);
     }
 
-    public List<CommentResponse> getPositionComment(Long id) {
+    public List<CommentResponse> getPositionComment(String id) {
         List<Review> reviews = commentRepository.findByGeoFeaturesId(id);
         return commentMapper.toCommentResponse(reviews);
     }
 
     @PreAuthorize("hasRole('USER')")
-    public CommentResponse updateComment(Long id, UpdateCommentRequest request) {
+    public CommentResponse updateComment(String id, UpdateCommentRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User author = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User Not Found"));
@@ -111,7 +111,7 @@ public class CommentService {
                 .build();
     }
 
-    public void deleteComment(Long id) {
+    public void deleteComment(String id) {
         Review review = commentRepository.findById(id)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Review not found"));
         commentRepository.delete(review);

@@ -17,7 +17,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GeoResponse {
-    Long id;
+    String id;
     String name;
     List<Double> point;
     String address;

@@ -14,8 +14,8 @@ import java.util.Date;
 @Builder
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     @Column(length = 500)
     String token;
     @Column(length = 500)

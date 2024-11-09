@@ -55,7 +55,7 @@ public class GeoController {
     }
     //lấy theo id
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<GeoResponse>> getGeoFeature(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<GeoResponse>> getGeoFeature(@PathVariable String id) {
         ApiResponse<GeoResponse> apiResponse = ApiResponse.<GeoResponse>builder()
                 .code("Geo-s-02")
                 .message("Get by geoFeatures id successfully")
@@ -76,7 +76,7 @@ public class GeoController {
 
     @PutMapping("/{id}")
     public  ResponseEntity<ApiResponse<GeoResponse>> updateGeoFeatures(
-            @PathVariable Long id,
+            @PathVariable String id,
             @ModelAttribute GeoRequest request,
             @RequestParam("files") List<MultipartFile> files) throws ParseException, IOException {
         ApiResponse<GeoResponse> apiResponse = ApiResponse.<GeoResponse>builder()
@@ -89,7 +89,7 @@ public class GeoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteGeoFeature(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteGeoFeature(@PathVariable String id) {
         geoJsonService.deleteFeatures(id);
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
                 .code("Geo-s-04")

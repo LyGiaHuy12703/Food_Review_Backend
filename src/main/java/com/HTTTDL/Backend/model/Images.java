@@ -15,8 +15,8 @@ import java.util.List;
 @Builder
 public class Images {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     String url;
     @ManyToOne
     @JoinColumn(name = "position_id")

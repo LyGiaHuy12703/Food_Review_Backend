@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateCommentRequest {
-    Long positionId;
+    String positionId;
     String comment;
     int rating;
 }

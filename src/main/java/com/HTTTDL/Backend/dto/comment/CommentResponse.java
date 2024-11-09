@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CommentResponse {
-    Long id;
+    String id;
     String comment;
     int rating;
     GeoFeature feature;

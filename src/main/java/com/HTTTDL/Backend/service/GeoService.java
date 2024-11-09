@@ -97,7 +97,7 @@ public class GeoService {
         return geometryFactory.createPoint(new Coordinate(lon, lat)); // Kinh độ, Vĩ độ
     }
 
-    public GeoResponse getGeoFeatureById(Long id) {
+    public GeoResponse getGeoFeatureById(String id) {
         GeoFeature geoFeature = geoFeatureRepository.findById(id)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "GeoFeature not found"));
 
@@ -143,7 +143,7 @@ public class GeoService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public GeoResponse updateFeatures(Long id, GeoRequest request, List<MultipartFile> files) throws IOException {
+    public GeoResponse updateFeatures(String id, GeoRequest request, List<MultipartFile> files) throws IOException {
         // Kiểm tra xem GeoFeature có tồn tại không
         GeoFeature geoFeature = geoFeatureRepository.findById(id)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "GeoFeature not found"));
@@ -187,7 +187,7 @@ public class GeoService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteFeatures(Long id) {
+    public void deleteFeatures(String id) {
         GeoFeature geoFeature = geoFeatureRepository.findById(id)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "GeoFeature not found"));
 

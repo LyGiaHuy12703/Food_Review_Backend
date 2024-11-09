@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     String comment;
     int rating;
     @ManyToOne

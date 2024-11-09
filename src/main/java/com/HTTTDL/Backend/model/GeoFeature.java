@@ -25,8 +25,8 @@ import java.util.Set;
 public class GeoFeature {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
     String name;
     String address;

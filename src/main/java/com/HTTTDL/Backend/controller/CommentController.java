@@ -29,7 +29,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<ApiResponse<List<CommentResponse>>> getCommentById(@PathVariable Long id) {
+    ResponseEntity<ApiResponse<List<CommentResponse>>> getCommentById(@PathVariable String id) {
         ApiResponse<List<CommentResponse>> comment = ApiResponse.<List<CommentResponse>>builder()
                 .code("comment-s-02")
                 .data(commentService.getPositionComment(id))
@@ -38,7 +38,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(comment);
     }
     @PutMapping("/{id}")
-    ResponseEntity<ApiResponse<CommentResponse>> putCommentById(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
+    ResponseEntity<ApiResponse<CommentResponse>> putCommentById(@PathVariable String id, @RequestBody UpdateCommentRequest request) {
         ApiResponse<CommentResponse> comment = ApiResponse.<CommentResponse>builder()
                 .code("comment-s-03")
                 .data(commentService.updateComment(id, request))
@@ -47,7 +47,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
     @DeleteMapping("{id}")
-    ResponseEntity<ApiResponse<CommentResponse>> deleteCommentById(@PathVariable Long id) {
+    ResponseEntity<ApiResponse<CommentResponse>> deleteCommentById(@PathVariable String id) {
         commentService.deleteComment(id);
         ApiResponse<CommentResponse> comment = ApiResponse.<CommentResponse>builder()
                 .code("comment-s-04")

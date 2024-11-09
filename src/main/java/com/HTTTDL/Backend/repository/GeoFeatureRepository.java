@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GeoFeatureRepository extends JpaRepository<GeoFeature, Long> {
+public interface GeoFeatureRepository extends JpaRepository<GeoFeature, String> {
     boolean existsByName(String name);
     List<GeoFeature> findByRateGreaterThanEqual(float star);
     @Query("SELECT g FROM GeoFeature g WHERE ST_DistanceSphere(g.point, ST_SetSRID(ST_Point(:lon, :lat), 4326)) <= :distance")
