@@ -2,9 +2,7 @@ package com.HTTTDL.Backend.dto.Geo;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.locationtech.jts.geom.Geometry;
 
-import java.awt.*;
 import java.time.LocalTime;
 
 @Data
@@ -22,5 +20,4 @@ public class GeoRequest {
     LocalTime close;
     String advantage;
     String disadvantage;
-    Float rate;
 }

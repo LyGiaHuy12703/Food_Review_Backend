@@ -41,8 +41,6 @@ public class SecurityConfig {
             "auth/login",
             "auth/introspect",
             "auth/refreshToken",
-            "geo/upload",
-            "geo/features",
             "auth/register/verify/**"
     } ;
 
@@ -56,6 +54,7 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "auth/verify/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "geo/**").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->

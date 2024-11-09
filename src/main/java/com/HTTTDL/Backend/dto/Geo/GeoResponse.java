@@ -1,6 +1,7 @@
 package com.HTTTDL.Backend.dto.Geo;
 
 import com.HTTTDL.Backend.model.Review;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GeoResponse {
     Long id;

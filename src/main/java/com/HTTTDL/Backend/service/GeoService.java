@@ -1,32 +1,19 @@
 package com.HTTTDL.Backend.service;
-import com.HTTTDL.Backend.configuration.CloudinaryConfig;
 import com.HTTTDL.Backend.dto.Geo.GeoRequest;
 import com.HTTTDL.Backend.dto.Geo.GeoResponse;
-import com.HTTTDL.Backend.dto.Geo.PointResponse;
 import com.HTTTDL.Backend.exception.AppException;
-import com.HTTTDL.Backend.mapper.GeoMapper;
 import com.HTTTDL.Backend.model.GeoFeature;
 import com.HTTTDL.Backend.repository.GeoFeatureRepository;
-import com.cloudinary.utils.ObjectUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.geojson.feature.FeatureJSON;
-import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.geometry.jts.WKTReader2;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.io.ParseException;
-import org.locationtech.jts.io.WKTReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,8 +31,6 @@ public class GeoService {
     private GeoFeatureRepository geoFeatureRepository;
     @Autowired
     private CloudinaryService cloudinaryService;
-    @Autowired
-    private GeoMapper geoMapper;
 
     public DefaultFeatureCollection readGeoJson(String filePath) throws IOException {
         File geoJsonFile = new File(filePath);
@@ -65,7 +50,7 @@ public class GeoService {
     }
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public GeoResponse createGeoFeatures(GeoRequest request, List<MultipartFile> files) throws IOException, ParseException {
+    public GeoResponse createGeoFeatures(GeoRequest request, List<MultipartFile> files) throws IOException {
         boolean checkExist = geoFeatureRepository.existsByName(request.getName());
         if(checkExist){
             throw new AppException(HttpStatus.BAD_REQUEST, "GeoFeature already exists");
@@ -85,7 +70,6 @@ public class GeoService {
                 .open(request.getOpen())
                 .close(request.getClose())
                 .phone(request.getPhone())
-                .rate(request.getRate())
                 .disadvantage(request.getDisadvantage())
                 .advantage(request.getAdvantage())
                 .point(point)
@@ -119,7 +103,7 @@ public class GeoService {
 
         List<Double> pointCoordinates = List.of(geoFeature.getPoint().getY(), geoFeature.getPoint().getX());
 
-        GeoResponse geoResponse = GeoResponse.builder()
+        return GeoResponse.builder()
                 .id(geoFeature.getId())
                 .address(geoFeature.getAddress())
                 .name(geoFeature.getName())
@@ -132,7 +116,6 @@ public class GeoService {
                 .point(pointCoordinates)
                 .images(geoFeature.getImages())
                 .build();
-        return geoResponse;
     }
 
 
@@ -171,7 +154,6 @@ public class GeoService {
         geoFeature.setPhone(request.getPhone());
         geoFeature.setOpen(request.getOpen());
         geoFeature.setClose(request.getClose());
-        geoFeature.setRate(request.getRate());
         geoFeature.setAdvantage(request.getAdvantage());
         geoFeature.setDisadvantage(request.getDisadvantage());
 
@@ -188,7 +170,7 @@ public class GeoService {
         GeoFeature updatedGeoFeature = geoFeatureRepository.save(geoFeature);
 
         // Tạo GeoResponse từ GeoFeature đã cập nhật
-        GeoResponse geoResponse = GeoResponse.builder()
+        return GeoResponse.builder()
                 .id(updatedGeoFeature.getId())
                 .name(updatedGeoFeature.getName())
                 .open(updatedGeoFeature.getOpen())
@@ -202,8 +184,6 @@ public class GeoService {
                 .reviews(updatedGeoFeature.getReviews())
                 .point(List.of(updatedGeoFeature.getPoint().getY(), updatedGeoFeature.getPoint().getX()))
                 .build();
-
-        return geoResponse;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
