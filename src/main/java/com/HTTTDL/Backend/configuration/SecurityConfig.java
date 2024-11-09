@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "auth/verify/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "geo/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "comment/**").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->

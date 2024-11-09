@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +39,7 @@ public class GeoFeature {
     Float rate;
 
     @Column(columnDefinition = "POINT")
+    @JsonIgnore
     Point point;
 
     @OneToMany(mappedBy = "geoFeatures", cascade = CascadeType.ALL, orphanRemoval = true)

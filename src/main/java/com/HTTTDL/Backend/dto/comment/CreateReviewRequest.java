@@ -12,7 +12,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateCommentRequest {
+public class CreateReviewRequest {
+    String positionId;
     String comment;
     int rating;
 }

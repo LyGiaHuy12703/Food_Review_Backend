@@ -74,6 +74,7 @@ public class AuthenticateService {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .name(request.getName())
                 .build();
         user.setRole(role);
         userRepository.save(user);
