@@ -3,14 +3,10 @@ package com.HTTTDL.Backend.controller;
 import com.HTTTDL.Backend.dto.Api.ApiResponse;
 import com.HTTTDL.Backend.dto.Geo.GeoResponse;
 import com.HTTTDL.Backend.service.FilterService;
-import com.HTTTDL.Backend.service.GeoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,9 +30,10 @@ public class FilterController {
             @RequestParam double lat,
             @RequestParam double lon,
             @RequestParam double distance) { // distance gửi đơn vị mét
+        double transferDistance = distance * 1000;
         ApiResponse<List<GeoResponse>> apiResponse = ApiResponse.<List<GeoResponse>>builder()
                 .message("get all by distance success")
-                .data(filterService.getGeoFeaturesWithinDistance(lat, lon, distance))
+                .data(filterService.getGeoFeaturesWithinDistance(lat, lon, transferDistance))
                 .code("filter-s-02")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);

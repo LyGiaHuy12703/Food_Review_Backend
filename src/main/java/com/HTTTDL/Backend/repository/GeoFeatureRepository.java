@@ -13,8 +13,12 @@ import java.util.List;
 public interface GeoFeatureRepository extends JpaRepository<GeoFeature, String> {
     boolean existsByName(String name);
     List<GeoFeature> findByRateGreaterThanEqual(float star);
-    @Query("SELECT g FROM GeoFeature g WHERE ST_DistanceSphere(g.point, ST_SetSRID(ST_Point(:lon, :lat), 4326)) <= :distance")
-    List<GeoFeature> findWithinDistance(@Param("lat") double lat,
+    List<GeoFeature> findByRateBetween(float start, float end);
+    @Query(value = "SELECT gf1_0.id, gf1_0.address, gf1_0.advantage, gf1_0.close, gf1_0.disadvantage, " +
+            "gf1_0.name, gf1_0.open, gf1_0.phone, gf1_0.point, gf1_0.rate " +
+            "FROM geo_features gf1_0 " +
+            "WHERE ST_Distance_Sphere(gf1_0.point, Point(:lat, :lon)) <= :distance",
+            nativeQuery = true)    List<GeoFeature> findWithinDistance(@Param("lat") double lat,
                                         @Param("lon") double lon,
                                         @Param("distance") double distance);
 }

@@ -21,21 +21,23 @@ public class FilterService {
 
     //tìm theo số sao
     public List<GeoResponse> getGeoFeaturesByStar(int star) {
-        List<GeoFeature> geoFeatures = geoFeatureRepository.findByRateGreaterThanEqual(star);
-        List<GeoResponse> geoResponses = geoFeatures.stream()
+        int end=0;
+        if(star == 5){
+            end=star;
+        }else{
+            end=star+1;
+        }
+        List<GeoFeature> geoFeatures = geoFeatureRepository.findByRateBetween(star, end);
+        return geoFeatures.stream()
                 .map(this::convertToGeoResponse)
                 .collect(Collectors.toList());
-
-        return geoResponses;
     }
     //tìm theo khoảng cách
     public List<GeoResponse> getGeoFeaturesWithinDistance(double lat, double lon, double distance) {
         List<GeoFeature> geoFeatures =  geoFeatureRepository.findWithinDistance(lat, lon, distance);
-        List<GeoResponse> geoResponses = geoFeatures.stream()
+        return geoFeatures.stream()
                 .map(this::convertToGeoResponse)
                 .collect(Collectors.toList());
-
-        return geoResponses;
     }
     private GeoResponse convertToGeoResponse(GeoFeature geoFeature) {
         return GeoResponse.builder()
