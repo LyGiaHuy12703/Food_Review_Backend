@@ -79,7 +79,7 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.addAllowedOrigin("http://127.0.0.1:5500");
-        corsConfiguration.addAllowedOrigin("http://localhost:3000");  // Cho phép frontend truy cập từ localhost:3000
+        corsConfiguration.addAllowedOrigin("http://localhost:5173");  // Cho phép frontend truy cập từ localhost:3000
         corsConfiguration.addAllowedMethod("*");  // Cho phép tất cả các phương thức: GET, POST, PUT, DELETE, etc.
         corsConfiguration.addAllowedHeader("*");  // Cho phép tất cả các header
         corsConfiguration.setAllowCredentials(true);  // Cho phép gửi thông tin xác thực như cookies, authorization headers

@@ -17,7 +17,7 @@ public interface GeoFeatureRepository extends JpaRepository<GeoFeature, String> 
     @Query(value = "SELECT gf1_0.id, gf1_0.address, gf1_0.advantage, gf1_0.close, gf1_0.disadvantage, " +
             "gf1_0.name, gf1_0.open, gf1_0.phone, gf1_0.point, gf1_0.rate " +
             "FROM geo_features gf1_0 " +
-            "WHERE ST_Distance_Sphere(gf1_0.point, Point(:lat, :lon)) <= :distance",
+            "WHERE ST_Distance_Sphere(gf1_0.point, Point(:lon, :lat)) <= :distance",
             nativeQuery = true)    List<GeoFeature> findWithinDistance(@Param("lat") double lat,
                                         @Param("lon") double lon,
                                         @Param("distance") double distance);
