@@ -1,6 +1,7 @@
 package com.HTTTDL.Backend.controller;
 
 import com.HTTTDL.Backend.dto.Api.ApiResponse;
+import com.HTTTDL.Backend.dto.Filter.FilterByTimeRequest;
 import com.HTTTDL.Backend.dto.Geo.GeoResponse;
 import com.HTTTDL.Backend.service.FilterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,18 @@ public class FilterController {
                 .message("get all by distance success")
                 .data(filterService.getGeoFeaturesWithinDistance(lat, lon, transferDistance))
                 .code("filter-s-02")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/by-time")
+    public ResponseEntity<ApiResponse<List<GeoResponse>>> getGeoFeaturesByTime(
+            @RequestBody FilterByTimeRequest request
+    ){
+        ApiResponse<List<GeoResponse>> apiResponse = ApiResponse.<List<GeoResponse>>builder()
+                .message("get all by star success")
+                .data(filterService.getGeoFeaturesByTime(request))
+                .code("filter-s-01")
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }

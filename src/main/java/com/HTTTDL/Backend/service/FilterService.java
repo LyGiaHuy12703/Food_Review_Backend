@@ -1,5 +1,6 @@
 package com.HTTTDL.Backend.service;
 
+import com.HTTTDL.Backend.dto.Filter.FilterByTimeRequest;
 import com.HTTTDL.Backend.dto.Geo.GeoResponse;
 import com.HTTTDL.Backend.exception.AppException;
 import com.HTTTDL.Backend.mapper.GeoMapper;
@@ -46,6 +47,12 @@ public class FilterService {
                 .map(this::convertToGeoResponse)
                 .collect(Collectors.toList());
     }
+    public List<GeoResponse> getGeoFeaturesByTime(FilterByTimeRequest request) {
+        List<GeoFeature> geoFeatures = geoFeatureRepository.findOpenGeoFeatures(request.getTime());
+        return geoFeatures.stream()
+                .map(this::convertToGeoResponse)
+                .collect(Collectors.toList());
+    }
     private GeoResponse convertToGeoResponse(GeoFeature geoFeature) {
         return GeoResponse.builder()
                 .id(geoFeature.getId())
@@ -60,5 +67,6 @@ public class FilterService {
                 .images(new HashSet<>(geoFeature.getImages())) // chuyển Set<String> thành List<String>
                 .build();
     }
+
 
 }

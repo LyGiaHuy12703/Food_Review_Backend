@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,6 @@ public interface GeoFeatureRepository extends JpaRepository<GeoFeature, String> 
             nativeQuery = true)    List<GeoFeature> findWithinDistance(@Param("lat") double lat,
                                         @Param("lon") double lon,
                                         @Param("distance") double distance);
+    @Query("SELECT g FROM GeoFeature g WHERE :time BETWEEN g.open AND g.close")
+    List<GeoFeature> findOpenGeoFeatures(@Param("time") LocalTime time);
 }
