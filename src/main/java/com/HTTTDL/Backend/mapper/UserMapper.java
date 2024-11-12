@@ -1,6 +1,6 @@
 package com.HTTTDL.Backend.mapper;
 
-import com.HTTTDL.Backend.dto.Auth.RegisterRequest;
+import com.HTTTDL.Backend.dto.Auth.SignUpRequest;
 import com.HTTTDL.Backend.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "password",ignore = true)
-    User toUser(RegisterRequest request);
+    User toUser(SignUpRequest request);
 
 //    UserResponse userToUserResponse(User user);
 //

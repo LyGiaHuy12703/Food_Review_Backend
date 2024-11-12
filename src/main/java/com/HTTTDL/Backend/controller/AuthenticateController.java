@@ -5,7 +5,7 @@ import com.HTTTDL.Backend.dto.Api.ApiResponse;
 import com.HTTTDL.Backend.dto.Auth.AuthRequest;
 import com.HTTTDL.Backend.dto.Auth.AuthResponse;
 import com.HTTTDL.Backend.dto.Auth.RefreshRequest;
-import com.HTTTDL.Backend.dto.Auth.RegisterRequest;
+import com.HTTTDL.Backend.dto.Auth.SignUpRequest;
 import com.HTTTDL.Backend.dto.Token.RefreshTokenRequest;
 import com.HTTTDL.Backend.dto.Token.TokenResponse;
 import com.HTTTDL.Backend.service.AuthenticateService;
@@ -38,7 +38,7 @@ public class AuthenticateController {
 
     //Đăng ký cho user
     @PostMapping("/register")
-    ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Valid RegisterRequest request) {
+    ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Valid SignUpRequest request) {
         authenticateService.register(request);
         String verificationCode = UUID.randomUUID().toString();
         codeUtil.save(verificationCode, request, 1);
@@ -51,7 +51,7 @@ public class AuthenticateController {
     }
     @GetMapping("/register/verify/{verificationCode}")
     public RedirectView verifyRegister(@PathVariable String verificationCode) {
-        RegisterRequest request = (RegisterRequest) codeUtil.get(verificationCode);
+        SignUpRequest request = (SignUpRequest) codeUtil.get(verificationCode);
         AuthResponse authResponse = authenticateService.verifyRegister(request);
         codeUtil.remove(verificationCode);
         emailService.sendEmailToWelcome(request.getEmail());

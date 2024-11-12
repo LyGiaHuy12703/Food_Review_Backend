@@ -53,13 +53,13 @@ public class AuthenticateService {
     @Value("${jwt.expiryTimeRefreshToken}")
     protected int TOKEN_REFRESH_EXPIRY_TIME;
 
-    public void register(RegisterRequest request) {
+    public void register(SignUpRequest request) {
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
         if(existedUser){
             throw new AppException(HttpStatus.BAD_REQUEST, "Email has existed", "auth-e-01");
         }
     }
-    public AuthResponse verifyRegister(RegisterRequest request) {
+    public AuthResponse verifyRegister(SignUpRequest request) {
         // Find user if not existed
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
         if(existedUser){
