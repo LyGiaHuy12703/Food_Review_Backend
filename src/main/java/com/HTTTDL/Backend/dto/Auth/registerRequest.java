@@ -1,6 +1,5 @@
 package com.HTTTDL.Backend.dto.Auth;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

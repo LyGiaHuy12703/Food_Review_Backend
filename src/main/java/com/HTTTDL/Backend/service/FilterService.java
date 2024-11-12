@@ -30,8 +30,23 @@ public class FilterService {
         }
         List<GeoFeature> geoFeatures = geoFeatureRepository.findByRateBetween(star, end);
         return geoFeatures.stream()
-                .map(this::convertToGeoResponse)
-                .collect(Collectors.toList());
+                .map(geoFeature -> {
+                    List<Double> pointCoordinates = List.of(geoFeature.getPoint().getY(), geoFeature.getPoint().getX());
+                    return GeoResponse.builder()
+                            .id(geoFeature.getId()) // Đảm bảo có id trong phản hồi
+                            .address(geoFeature.getAddress())
+                            .name(geoFeature.getName())
+                            .open(geoFeature.getOpen())
+                            .close(geoFeature.getClose())
+                            .phone(geoFeature.getPhone())
+                            .rate(geoFeature.getRate())
+                            .disadvantage(geoFeature.getDisadvantage())
+                            .advantage(geoFeature.getAdvantage())
+                            .point(pointCoordinates)
+                            .images(geoFeature.getImages())
+                            .build();
+                })
+                .collect(Collectors.toList()); // Chuyển đổi danh sách GeoFeature thành danh sách GeoResponse
     }
     //tìm theo khoảng cách
     public List<GeoResponse> getGeoFeaturesWithinDistance(double lat, double lon, double distance) {
@@ -44,14 +59,44 @@ public class FilterService {
         log.info("Latitude: {}, Longitude: {}, Distance: {}", lat, lon, distance);
         List<GeoFeature> geoFeatures =  geoFeatureRepository.findWithinDistance(lat, lon, distance);
         return geoFeatures.stream()
-                .map(this::convertToGeoResponse)
-                .collect(Collectors.toList());
+                .map(geoFeature -> {
+                    List<Double> pointCoordinates = List.of(geoFeature.getPoint().getY(), geoFeature.getPoint().getX());
+                    return GeoResponse.builder()
+                            .id(geoFeature.getId()) // Đảm bảo có id trong phản hồi
+                            .address(geoFeature.getAddress())
+                            .name(geoFeature.getName())
+                            .open(geoFeature.getOpen())
+                            .close(geoFeature.getClose())
+                            .phone(geoFeature.getPhone())
+                            .rate(geoFeature.getRate())
+                            .disadvantage(geoFeature.getDisadvantage())
+                            .advantage(geoFeature.getAdvantage())
+                            .point(pointCoordinates)
+                            .images(geoFeature.getImages())
+                            .build();
+                })
+                .collect(Collectors.toList()); // Chuyển đổi danh sách GeoFeature thành danh sách GeoResponse
     }
     public List<GeoResponse> getGeoFeaturesByTime(FilterByTimeRequest request) {
         List<GeoFeature> geoFeatures = geoFeatureRepository.findOpenGeoFeatures(request.getTime());
         return geoFeatures.stream()
-                .map(this::convertToGeoResponse)
-                .collect(Collectors.toList());
+                .map(geoFeature -> {
+                    List<Double> pointCoordinates = List.of(geoFeature.getPoint().getY(), geoFeature.getPoint().getX());
+                    return GeoResponse.builder()
+                            .id(geoFeature.getId()) // Đảm bảo có id trong phản hồi
+                            .address(geoFeature.getAddress())
+                            .name(geoFeature.getName())
+                            .open(geoFeature.getOpen())
+                            .close(geoFeature.getClose())
+                            .phone(geoFeature.getPhone())
+                            .rate(geoFeature.getRate())
+                            .disadvantage(geoFeature.getDisadvantage())
+                            .advantage(geoFeature.getAdvantage())
+                            .point(pointCoordinates)
+                            .images(geoFeature.getImages())
+                            .build();
+                })
+                .collect(Collectors.toList()); // Chuyển đổi danh sách GeoFeature thành danh sách GeoResponse
     }
     private GeoResponse convertToGeoResponse(GeoFeature geoFeature) {
         return GeoResponse.builder()
