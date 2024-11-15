@@ -40,7 +40,7 @@ public class FilterController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @GetMapping("/by-time")
+    @PostMapping("/by-time")
     public ResponseEntity<ApiResponse<List<GeoResponse>>> getGeoFeaturesByTime(
             @RequestBody FilterByTimeRequest request
     ){
