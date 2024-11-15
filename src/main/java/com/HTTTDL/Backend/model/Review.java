@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +27,10 @@ public class Review {
     @JsonBackReference
     @JoinColumn(name = "position_id")
     GeoFeature geoFeatures;
+
+    LocalDateTime createdAt = LocalDateTime.now();
+
+    void onCreate(){
+        this.createdAt = LocalDateTime.now();
+    }
 }

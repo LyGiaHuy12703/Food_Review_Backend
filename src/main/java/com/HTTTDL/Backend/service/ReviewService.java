@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -49,6 +50,7 @@ public class ReviewService {
                 .geoFeatures(geoFeature)
                 .user(author)
                 .rating(request.getRating())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         reviewRepository.save(review);
@@ -59,6 +61,7 @@ public class ReviewService {
                 .geoFeatures(geoFeature)
                 .comment(review.getComment())
                 .rating(review.getRating())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
     private void updateRate(String geoFeatureId, int rating) {
@@ -110,7 +113,21 @@ public class ReviewService {
                 .build();
     }
 
+    @PreAuthorize("hasRole('USER')")
     public void deleteComment(String id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "User Not Found"));
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Review not found"));
+        if(!review.getUser().equals(user)) {
+            throw new AppException(HttpStatus.FORBIDDEN, "You are not authorized to delete this comment");
+        }
+        reviewRepository.delete(review);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteCommentForAdmin(String id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Review not found"));
         reviewRepository.delete(review);

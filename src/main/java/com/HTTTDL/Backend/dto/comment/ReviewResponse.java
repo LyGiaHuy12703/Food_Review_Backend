@@ -5,6 +5,8 @@ import com.HTTTDL.Backend.model.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,5 @@ public class ReviewResponse {
     int rating;
     GeoFeature geoFeatures;
     User user;
+    LocalDateTime createdAt;
 }

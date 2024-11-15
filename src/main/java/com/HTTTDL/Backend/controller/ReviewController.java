@@ -55,4 +55,14 @@ public class ReviewController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(comment);
     }
+    //method for admin
+    @DeleteMapping("/admin/{id}")
+    ResponseEntity<ApiResponse<ReviewResponse>> deleteCommentByIdForAdmin(@PathVariable String id) {
+        reviewService.deleteCommentForAdmin(id);
+        ApiResponse<ReviewResponse> comment = ApiResponse.<ReviewResponse>builder()
+                .code("comment-s-05")
+                .message("Delete comment success")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
+    }
 }
