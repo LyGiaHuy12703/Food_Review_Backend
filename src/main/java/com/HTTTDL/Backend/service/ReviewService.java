@@ -43,7 +43,6 @@ public class ReviewService {
         GeoFeature geoFeature = geoFeatureRepository.findById(request.getPositionId())
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "GeoFeature Not Found"));
 
-        updateRate(request.getPositionId(), request.getRating());
 
         Review review = Review.builder()
                 .comment(request.getComment())
@@ -55,6 +54,9 @@ public class ReviewService {
 
         reviewRepository.save(review);
 
+        updateRate(request.getPositionId());
+
+
         return ReviewResponse.builder()
                 .id(review.getId())
                 .user(author)
@@ -64,7 +66,7 @@ public class ReviewService {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
-    private void updateRate(String geoFeatureId, int rating) {
+    private void updateRate(String geoFeatureId) {
         GeoFeature geoFeature = geoFeatureRepository.findById(geoFeatureId)
                 .orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND, "Feature not found"));
         List<Review> reviews = reviewRepository.findByGeoFeaturesId(geoFeatureId);
@@ -72,11 +74,8 @@ public class ReviewService {
         // Tính tổng số điểm từ tất cả các đánh giá
         int totalRating = reviews.stream().mapToInt(Review::getRating).sum();
 
-        // Thêm điểm đánh giá mới vào tổng điểm
-        totalRating += rating;
-
         // Tính tổng số lần đánh giá (bao gồm cả đánh giá mới)
-        int numberOfRatings = reviews.size() + 1;
+        int numberOfRatings = reviews.size();
         float averageRate = (float) totalRating / numberOfRatings;
 
         geoFeature.setRate(averageRate);
@@ -100,10 +99,11 @@ public class ReviewService {
         if(!review.getUser().equals(author)) {
             throw new AppException(HttpStatus.FORBIDDEN, "You are not authorized to update this comment");
         }
-        updateRate(review.getGeoFeatures().getId(), request.getRating());
         review.setComment(request.getComment());
         review.setRating(request.getRating());
         reviewRepository.save(review);
+        updateRate(review.getGeoFeatures().getId());
+
         return ReviewResponse.builder()
                 .id(review.getId())
                 .user(author)
@@ -124,6 +124,8 @@ public class ReviewService {
             throw new AppException(HttpStatus.FORBIDDEN, "You are not authorized to delete this comment");
         }
         reviewRepository.delete(review);
+
+        updateRate(review.getGeoFeatures().getId());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
