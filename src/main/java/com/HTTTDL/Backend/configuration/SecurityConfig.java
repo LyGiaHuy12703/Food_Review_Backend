@@ -27,7 +27,6 @@ import org.springframework.web.filter.CorsFilter;
 import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 
-//config trong https://docs.spring.io/spring-security/reference/servlet/architecture.html
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

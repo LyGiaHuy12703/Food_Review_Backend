@@ -46,7 +46,7 @@ public class ReviewController {
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<ApiResponse<ReviewResponse>> deleteCommentById(@PathVariable String id) {
         reviewService.deleteComment(id);
         ApiResponse<ReviewResponse> comment = ApiResponse.<ReviewResponse>builder()
