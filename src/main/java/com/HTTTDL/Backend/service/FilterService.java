@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,4 +115,26 @@ public class FilterService {
     }
 
 
+    public List<GeoResponse> getGeoFeaturesBySearch(String name) {
+        List<GeoFeature> geoFeatures = geoFeatureRepository.findByNameContainingIgnoreCase(name);
+
+        return geoFeatures.stream()
+                .map(geoFeature -> {
+                    List<Double> pointCoordinates = List.of(geoFeature.getPoint().getY(), geoFeature.getPoint().getX());
+                    return GeoResponse.builder()
+                            .id(geoFeature.getId())
+                            .name(geoFeature.getName())
+                            .address(geoFeature.getAddress())
+                            .open(geoFeature.getOpen())
+                            .close(geoFeature.getClose())
+                            .phone(geoFeature.getPhone())
+                            .rate(geoFeature.getRate())
+                            .disadvantage(geoFeature.getDisadvantage())
+                            .advantage(geoFeature.getAdvantage())
+                            .point(pointCoordinates)
+                            .images(geoFeature.getImages())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 }

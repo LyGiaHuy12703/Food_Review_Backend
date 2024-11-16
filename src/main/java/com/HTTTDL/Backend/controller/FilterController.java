@@ -51,4 +51,16 @@ public class FilterController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<GeoResponse>>> getGeoFeatures(
+            @RequestParam String name
+    ){
+        ApiResponse<List<GeoResponse>> apiResponse = ApiResponse.<List<GeoResponse>>builder()
+                .message("search geo success")
+                .code("filter-s-04")
+                .data(filterService.getGeoFeaturesBySearch(name))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
 }

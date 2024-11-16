@@ -24,4 +24,6 @@ public interface GeoFeatureRepository extends JpaRepository<GeoFeature, String> 
                                         @Param("distance") double distance);
     @Query("SELECT g FROM GeoFeature g WHERE :time BETWEEN g.open AND g.close")
     List<GeoFeature> findOpenGeoFeatures(@Param("time") LocalTime time);
+
+    List<GeoFeature> findByNameContainingIgnoreCase(String name);
 }
